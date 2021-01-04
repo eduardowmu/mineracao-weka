@@ -15,14 +15,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class Importador 
 {	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) 
 	{	EventQueue.invokeLater(new Runnable() 
 		{	public void run() 
@@ -34,14 +32,8 @@ public class Importador
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public Importador() {initialize();}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() 
 	{	frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
@@ -54,6 +46,9 @@ public class Importador
 		btnNewButton.addActionListener(new ActionListener() 
 		{	public void actionPerformed(ActionEvent arg0) 
 			{	String export = "@relation mercado\n\n";
+				List colunasNome = new ArrayList();
+				List colunasId = new ArrayList();
+				
 				try 
 				{	Class.forName("com.mysql.cj.jdbc.Driver");
 					try 
@@ -63,18 +58,36 @@ public class Importador
 						//comandos SQL
 						Statement statement = conn.createStatement();
 						
-						String sql = "SELECT idproduto, nome FROM `produtos` WHERE idproduto "
-								+ "IN(select idproduto FROM venda_produtos)";
+						String sql = "SELECT idproduto, nome "
+								+ "FROM `produtos` WHERE idproduto "
+								+ "IN(select idproduto "
+								+ "FROM venda_produtos)";
 						
 						ResultSet rs = statement.executeQuery(sql);
 						while(rs.next())
 						{	System.out.println(rs.getString("nome"));
-							export += "@attribute " + rs.getString("nome") + " {sim}\n";
+							colunasNome.add(rs.getString("nome"));
+							colunasId.add(rs.getInt("idProduto"));
+							export += "@attribute " + rs.getString("nome") + 
+									" {sim}\n";
 						}
+						
+						export += "\n@data\n";
+						
+						Statement vendas = conn.createStatement();
+						ResultSet rsVendas = vendas.executeQuery("SELECT * "
+								+ "FROM vendas");
+						
+						while(rsVendas.next())
+						{System.out.println(rsVendas.getDate("data_venda"));}
+						
 						//gerando o arquivo arrf
-						File file = new File("F:\\Users\\eduardowmu\\Desktop\\meusdoc\\estudo\\"
-								+ "FATEC\\7 - OUTROS SEMESTRES\\Udemy\\OUTROS-CURSOS\\"
-								+ "MIneração - JAVA\\mercados\\mercado.arrf");
+						File file = new File("F:\\Users\\eduardowmu\\"
+								+ "Desktop\\meusdoc\\estudo\\"
+								+ "FATEC\\7 - OUTROS SEMESTRES\\"
+								+ "Udemy\\OUTROS-CURSOS\\"
+								+ "MIneração - JAVA\\mercados\\"
+								+ "mercado.arrf");
 						
 						/*Procedimentos do java para gravarmos arquivos em disco*/
 						try 
