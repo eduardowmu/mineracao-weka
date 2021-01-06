@@ -1,7 +1,6 @@
 package br.edu.weka.importador;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
@@ -75,11 +74,36 @@ public class Importador
 						export += "\n@data\n";
 						
 						Statement vendas = conn.createStatement();
+						Statement vendaProdutos = conn.createStatement();
 						ResultSet rsVendas = vendas.executeQuery("SELECT * "
 								+ "FROM vendas");
 						
 						while(rsVendas.next())
-						{System.out.println(rsVendas.getDate("data_venda"));}
+						{	System.out.println(rsVendas.getDate("data_venda"));
+							//pegando posição por posição o valor da coluna.
+							//Se o ResultSet estiver vazio, quer dizer que o
+							//produto não existe, se tiver algum valor nele
+							//quer dizer que foi retornado id correspondente
+							//então o produto esta contido na venda.
+							for(int i = 0; i < colunasId.size(); i++)
+							{	ResultSet rsVendaProdutos = 
+									vendaProdutos.executeQuery(
+									"SELECT idvenda FROM venda_produtos "
+										+ "WHERE idproduto = " 
+										+ colunasId.get(i) 
+										+ " AND idvenda = " 
+										+ rsVendas.getInt("idvenda"));
+								//se existir produto
+								if(rsVendaProdutos.next())
+								{export += "sim,";}
+								
+								else {export += "?,";}
+							}
+							export = export.substring(0, export.length() - 1);
+							export += "\n";
+						}
+						
+						export = export.replace('é', 'e').replace('ã', 'a');
 						
 						//gerando o arquivo arrf
 						File file = new File("F:\\Users\\eduardowmu\\"
