@@ -1,0 +1,19 @@
+@relation mercado
+
+@attribute Leite {sim}
+@attribute Cafe {sim}
+@attribute Cerveja {sim}
+@attribute Pao {sim}
+@attribute Manteiga {sim}
+
+@data
+?,sim,?,sim,sim
+sim,?,sim,sim,sim
+?,sim,?,sim,sim
+sim,sim,?,sim,sim
+?,?,sim,?,?
+?,?,?,?,sim
+?,?,?,sim,?
+?,?,?,sim,?
+?,?,?,sim,?
+?,?,?,sim,?

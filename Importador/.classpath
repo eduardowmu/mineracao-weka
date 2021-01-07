@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="lib" path="F:/Users/eduardowmu/Desktop/meusdoc/estudo/FATEC/7 - OUTROS SEMESTRES/Udemy/OUTROS-CURSOS/MIneração - JAVA/repositorio-git/mineracao-weka/Importador/mysql-connector-java-8.0.21.jar"/>
+	<classpathentry kind="lib" path="F:/Users/eduardowmu/Desktop/meusdoc/estudo/FATEC/7 - OUTROS SEMESTRES/Udemy/OUTROS-CURSOS/MIneração - JAVA/repositorio-git/mineracao-weka/Importador/weka-3.6.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

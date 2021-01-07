@@ -17,16 +17,30 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+
+import weka.associations.Apriori;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+import javax.swing.JTextField;
 
 public class Importador 
 {	private JFrame frame;
+	private JTextArea textArea;
+	private JTextField textField;
 	public static void main(String[] args) 
 	{	EventQueue.invokeLater(new Runnable() 
 		{	public void run() 
 			{	try 
 				{	Importador window = new Importador();
 					window.frame.setVisible(true);
-				} catch (Exception e) {System.out.println(e.getMessage());}
+				} 
+				catch (Exception e) 
+				{System.out.println(e.getMessage());}
 			}
 		});
 	}
@@ -37,7 +51,6 @@ public class Importador
 	{	frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		//botão responsável pela importação dos dados
 		//buscando os dados da nossa base de dados.
@@ -135,6 +148,56 @@ public class Importador
 				{System.out.println(e.getMessage());}
 			}
 		});
-		frame.getContentPane().add(btnNewButton);
+		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("130px:grow"),
+				ColumnSpec.decode("75px"),
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("93px"),},
+			new RowSpec[] {
+				FormSpecs.LINE_GAP_ROWSPEC,
+				RowSpec.decode("23px"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),}));
+		
+		textField = new JTextField();
+		frame.getContentPane().add(textField, "1, 2, fill, default");
+		textField.setColumns(10);
+		frame.getContentPane().add(btnNewButton, "2, 2, left, top");
+		
+		JButton btnNewButton_1 = new JButton("Gerar regras");
+		btnNewButton_1.addActionListener(new ActionListener() 
+		{	public void actionPerformed(ActionEvent arg0) 
+			{	try 
+				{	DataSource ds = new DataSource(
+						"F:\\Users\\eduardowmu\\"
+						+ "Desktop\\meusdoc\\estudo\\"
+						+ "FATEC\\7 - OUTROS SEMESTRES\\"
+						+ "Udemy\\OUTROS-CURSOS\\"
+						+ "MIneração - JAVA\\mercados\\"
+						+ "mercado.arrf");
+					/*essa variável irá armazenar todos os registros
+					 *da base. Irá capturar todos os dados capturados
+					 *do objeto "ds"*/
+					Instances ins = ds.getDataSet();
+					System.out.println(ins.toString());
+					
+					/*objeto para geração das regras*/
+					Apriori ap = new Apriori();
+					ap.setNumRules(Integer.parseInt(textField.getText()));
+					ap.buildAssociations(ins);
+					textArea.setText(ap.toString());
+				} 
+				catch (Exception e) 
+				{System.out.println(e.getMessage());}
+			}
+		});
+		frame.getContentPane().add(btnNewButton_1, 
+				"4, 2, left, top");
+		
+		textArea = new JTextArea();
+		frame.getContentPane().add(textArea, 
+				"1, 6, 4, 1, fill, fill");
 	}
 }
